@@ -1,0 +1,56 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+
+/* ----- TAG SELECTORS ----- */
+h1{
+    color: #EFEFEF;
+    font-size: 60px;
+}
+
+h2{
+    color: #FFC069;
+}
+
+p{
+    color: #EFEFEF;
+    font-size: 25px;
+    width: 400px;
+    text-align: center;
+}
+
+/* forms styling */
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ----- CLASS SELECTORS ----- */
+.vl{
+    height: 300px;
+    background-image: linear-gradient(to right, rgba(255,192,105,0), rgba(255,192,105,0.75), rgba( 255,192,105, 0));
+    border-radius: 100%;
+    width: 2px;
+    border: 0;
+}
+
+
+/* ----- ID SELECTORS ----- */
+
+#mainBody{
+    background-color: #4A403A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+#formContainer{
+    display: flex;
+    text-align: center;
+}

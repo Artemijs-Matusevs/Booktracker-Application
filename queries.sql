@@ -1,0 +1,11 @@
+----- USERS TABLE QUERIES -----
+-- CREATE USERS TABLE --
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(10),
+	pin NUMERIC(4, 0)
+)
+
+-- INSERT TEST USER DATA --
+INSERT INTO users (username, pin)
+VALUES ('tom', 1234)
