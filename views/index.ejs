@@ -5,34 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookTracker Application</title>
     <link rel="stylesheet" href="CSS/styles.css">
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+    <!-- ION ICONS -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body>
     <div id="mainBody">
+        <% if (locals.alertMessage) {%>
+            <div class="alertMessage" style="background-color: <%=alertColor%>;">
+                <p> <%= alertMessage %></p>
+                <ion-icon name="close-outline" class="close" id="close"></ion-icon>
+            </div>
+        <% } %>
+
         <h1> Book Tracker </h1>
 
         <div id="formContainer">
-            <form>
+            <form action="/register" method="post">
                 <h2> Register </h2>
-                <input type="text">
-                <input type="text">
+                <input required name="username" type="text" placeholder="Username*">
+                <input required name="pin" type="password" placeholder="4-Digit Pin*">
+                <input class="submitButton" type="submit">
             </form>
 
             <div class="vl"></div>
 
-            <form>
+            <form action="/dashboard" method="post">
                 <h2> Sign-In </h2>
-                <input type="text">
-                <input type="text">
+                <input required name="username" type="text" placeholder="Username*">
+                <input required name="pin" type="password" placeholder="4-Digit Pin*">
+                <input class="submitButton" type="submit">
             </form>
         </div>
 
-        <p> Please note, this website was made for educational purposes.
-            The user accounts stored are not secure! </p>
+        <div class="footer">
+            <p> Please note, this website was made for educational purposes.
+                The user accounts stored are not secure! </p>
+            <p> Designed and Developed by Artemijs Matusev </p>
+        </div>
 
     </div>
 
-
 </body>
+
+
+
+<!-- JS -->
+<script>
+    //Animate the load in of the main body
+    $(document).ready(function()
+    {
+        $("#mainBody").animate({opacity:1}, function() {
+            $("h1").animate({opacity:1}, function() {
+                $("#formContainer").animate({opacity:1});
+            });
+        });
+    })
+
+
+    //Add click event listener to the ion icon to close alert message when it pops up
+    $("#close").click(function() {
+        $(".alertMessage").css("display", "none");
+    })
+
+</script>
 
 </html>

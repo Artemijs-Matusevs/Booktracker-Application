@@ -3,15 +3,22 @@
     margin: 0;
 }
 
+html{
+    background-color: #10276a;
+}
+
+
 
 /* ----- TAG SELECTORS ----- */
 h1{
     color: #EFEFEF;
     font-size: 60px;
+    opacity: 0;
 }
 
 h2{
-    color: #FFC069;
+    color: #EFEFEF;;
+    margin-bottom: 15px;
 }
 
 p{
@@ -25,32 +32,128 @@ p{
 form{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: #EFEFEF;
 }
+
+input{
+    width: 300px;
+    height: 25px;
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 2px 2px 10px #EFEFEF;
+    padding: 10px;
+    background-color: transparent;
+    color: #EFEFEF;
+    background-color: rgba(16,39,106,0.8)
+}
+
+::-webkit-input-placeholder {
+    color: #EFEFEF;
+}
+
+
+
+
 
 
 /* ----- CLASS SELECTORS ----- */
 .vl{
     height: 300px;
-    background-image: linear-gradient(to right, rgba(255,192,105,0), rgba(255,192,105,0.75), rgba( 255,192,105, 0));
+    background-image: linear-gradient(to right, rgba(255,192,105,0), rgba(239,239,239,0.75), rgba( 255,192,105, 0));
     border-radius: 100%;
     width: 2px;
     border: 0;
 }
 
+/* SUBMIT BUTTON FOR SIGN-IN/REGISTER FORMS */
+.submitButton{
+    background-color: rgba(16,39,106,0.8);
+    border-radius: 5%;
+    color: #EFEFEF;
+    width: 150px;
+    height: 45px;
+    font-family: 'PT Sans', sans-serif;
+    margin-bottom: 10px;
+    box-shadow: none;
+    font-weight: bold;
+}
+.submitButton:hover{
+    box-shadow: 2px 2px 10px #EFEFEF;;
+    transform: scale(1.2);
+}
+
+
+
+
+/* Alert message */
+.alertMessage{
+    width: 100%;
+    height: 10vh;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.close{
+    font-size: 45px;
+    color: #EFEFEF;
+}
+
+.close:hover{
+    transform: scale(1.2);
+}
+
+
+
+
+
+/* FOOTER */
+.footer{
+    position: fixed;
+    bottom: 0;
+    text-align: left;
+    width: 100vw;
+    height: 50px;
+    padding: 15px;
+    background-color: rgba(5,13,38,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.footer>p{
+    font-size: 18px;
+}
+
+
+
 
 /* ----- ID SELECTORS ----- */
 
 #mainBody{
-    background-color: #4A403A;
+    background-image:url("../Images/homeBackground.png");
+    background-color: #10276a;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     width: 100vw;
+    opacity: 0;
 }
 
 #formContainer{
     display: flex;
     text-align: center;
+    margin: 60px;
+    gap: 30px;
+    opacity: 0;
 }
