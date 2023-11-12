@@ -9,14 +9,14 @@ const db = new pg.Client({
     user: "postgres",
     host: "localhost",
     database: "booktracker",
-    password: "",
+    password: "10151015",
     port: 5432,
 })
 db. connect();
 
 const app = express();
 const port = 3000;
-const secretKey = ""
+const secretKey = "asda13ddSDsdSDNlkdsJDSNlsdnSJLFNlksj"
 const saltRounds = 10;
 
 //Adding static files and middleware set-up
@@ -77,6 +77,20 @@ async function checkUsername(userId) {
     }
 }
 
+//Retrieve user password
+async function checkPass(username) {
+    try{
+        const result = await db.query(`
+            SELECT username, pin, id
+            FROM users
+            WHERE username = $1`,
+            [username]);
+        return result.rows[0];
+    }catch (error){
+        return null;
+    }
+}
+
 
 
 
@@ -95,16 +109,31 @@ app.post("/sign-in", async (req, res) => {
         username: req.body.username,
         pin: req.body.pin};
 
-    console.log (userDetails);
+    const savedUserDetails = await checkPass(userDetails.username);
+    //console.log(savedUserDetails);
+
+    //Compare submitted password against the one stored in database
+    if (savedUserDetails && await bcrypt.compare(userDetails.pin, savedUserDetails.pin)){
+        console.log("Correct");
+        req.session.userId = savedUserDetails.id;
+        res.redirect("/dashboard");
+
+    }
+    else{
+        console.log("Failed");
+        res.render("index.ejs", {alertMessage: "Incorrect user details, try again.", alertColor: red});
+
+    }
 })
+
+
 
 //User dashboard
 app.get("/dashboard", async (req, res) => {
-    const userId = req.query.userId;
+    const userId = req.session.userId;
+    const username = await checkUsername(userId);
     //console.log(userId);
 
-    const username = await checkUsername(userId);
-    const userData = await checkBooks(userId);
     res.render("dashboard.ejs", {username: username});
 })
 
