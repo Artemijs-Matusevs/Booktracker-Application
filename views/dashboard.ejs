@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <%- include("partials/header.ejs") -%>
 </head>
+
 <body>
-    <h1> HELLO <%= username %> </h1>
+    <div id="mainBody">
+        <div class="coverPanel">
+            <div class="dashboard">
+                <div class="dateTitle">
+                    <h1> <%=username %> ! </h1>
+                    <a href="/sign-out" > <ion-icon name="log-in-outline"></ion-icon> </a>
+                </div>
+
+                <div class="contentContainer">
+
+                    <% if(locals.books) { %>
+                        <% books.forEach(function(book) { %>
+                            <label for="<%= book.id %>">
+                                <div class="panel">
+                                    <h3> <%= book.book_title %> </h3>
+                                </div>
+                            </label>
+                            <form style="display: none;" class="hiddenForm" action="/open-book" method="post">
+                                <input style="display: none;" name="book_id" type="text" value="<%= book.id %>">
+                                <input style="display: none;" id="<%= book.id %>" class="submitButton" type="submit">
+                            </form>
+                        <% }) %>
+                    <% }; %>
+
+                    <div class="panel">
+                        <a href="/new-book" class="plus"> <ion-icon name="add-outline"></ion-icon> </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <%- include("partials/footer.ejs") -%>
+        </div>
+    </div>
 </body>
+
+<!-- JS -->
+<script>
+    //Animate the load in of the main body
+    $(document).ready(function(){
+        $("#mainBody").animate({opacity:1});
+    })
+</script>
 </html>

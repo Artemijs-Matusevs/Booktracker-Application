@@ -25,6 +25,13 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({ secret: secretKey, resave: false, saveUninitialized: true}));
 
+//Middleware to check authentication
+function checkAuthenticated(req, res, next) {
+    if (req.session.userId) {
+        return next();
+    }
+    res.redirect('/');
+}
 
 
 //Colors for Alert messages
@@ -33,6 +40,17 @@ const red = "#A45D5D"
 
 
 // ----- FUNCTIONS -----
+//Delete book by book ID
+async function deleteBook(bookId) {
+    try{
+        const result = await db.query(`
+            DELETE FROM saved_books
+            WHERE id=$1`,
+            [bookId]);
+    }catch (error){
+        console.log(error);
+    }
+}
 
 //Get all books for a specific user by userId
 async function checkBooks(userId) {
@@ -46,21 +64,16 @@ async function checkBooks(userId) {
 }
 //console.log(await checkBooks(1));
 
-//Retrieve the id of a specific user
-async function checkUserId(username, pin) {
-    try{
-        const result = await db.query(`
-            SELECT id
-            FROM users
-            WHERE username = $1 AND pin = $2`,
-            [username, pin]);
+//Get book by book id
+async function getBook(bookId) {
+    const result = await db.query(`
+        SELECT *
+        FROM saved_books
+        WHERE id = $1`,
+        [bookId]);
 
-        return result.rows[0].id;
-    }catch(error){
-        return null;
-    }
+    return result.rows[0];
 }
-//console.log(await checkUserId("Tom", 12));
 
 //Retrieve username by user id
 async function checkUsername(userId) {
@@ -91,7 +104,37 @@ async function checkPass(username) {
     }
 }
 
+//Insert new book
+async function newBook(userId, bookTitle, bookNotes) {
+    try{
+        const result = await db.query(`
+            INSERT INTO saved_books (book_notes, book_title, user_id)
+            VALUES ($1, $2, $3)`,
+            [bookNotes, bookTitle, userId]);
+    }catch (error){
+        console.log(error);
+    }
+}
 
+//Check time of day
+function checkTime() {
+    const date = new Date();
+    const time = date.getHours();
+
+    if(time >= 5 && time < 12){
+        return "Good Morning, "
+    }
+    else if(time >= 12 && time < 17){
+        return "Good Afternoon, " 
+    }
+    else if(time >= 17 && time < 21){
+        return "Good Evening, "
+    }
+    else if(time >= 21){
+        return "Good Night, "
+    }
+}
+//console.log(checkTime());
 
 
 
@@ -99,7 +142,43 @@ async function checkPass(username) {
 
 // ------ END POINTS --------
 app.get("/", (req, res) => {
-    res.render("index.ejs");
+    if(req.session.userId){
+        res.redirect("/dashboard");
+    }
+    else{
+        res.render("index.ejs");
+    }
+})
+
+//New book
+app.post("/new-book", checkAuthenticated, async (req, res) => {
+    //console.log(req.body);
+    const title = req.body.book_title;
+    const notes = req.body.book_notes;
+
+    await newBook(req.session.userId, title, notes)
+    res.redirect("/dashboard");
+
+})
+
+
+//View book
+app.post("/open-book", checkAuthenticated, async (req, res) => {
+    //console.log(req.body);
+    const bookId = req.body.book_id;
+    const bookData = await getBook(bookId);
+
+    //console.log(bookData);
+
+    res.render("opened-book.ejs", {book: bookData});
+})
+
+//Delete book
+app.post("/delete-book", checkAuthenticated, async (req, res) => {
+    const bookId = req.body.book_id;
+
+    await deleteBook(bookId);
+    res.redirect("/dashboard");
 })
 
 
@@ -126,15 +205,34 @@ app.post("/sign-in", async (req, res) => {
     }
 })
 
+//Sign-out
+app.get("/sign-out", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            res.status(500).send('Could not sign-out, please try again');
+        }
+        else {
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+        }
+    })
+})
+
+//Create new book
+app.get("/new-book", checkAuthenticated, (req, res) => {
+    res.render("new-book.ejs");
+})
+
 
 
 //User dashboard
-app.get("/dashboard", async (req, res) => {
+app.get("/dashboard", checkAuthenticated,  async (req, res) => {
     const userId = req.session.userId;
     const username = await checkUsername(userId);
+    const books = await checkBooks(userId);
     //console.log(userId);
 
-    res.render("dashboard.ejs", {username: username});
+    res.render("dashboard.ejs", {username: checkTime() + username, books: books});
 })
 
 
@@ -156,7 +254,7 @@ app.post("/register", async (req, res) => {
                     res.render("index.ejs", {alertMessage: "Account has been created", alertColor: green});
             } catch(error) {
                 console.log(error);
-                res.render("index.ejs", {alertMessage: "The pin must be 4 digits or the username already exists, try again.", alertColor: red});
+                res.render("index.ejs", {alertMessage: "Username already exists, try again.", alertColor: red});
             }
         })
     })

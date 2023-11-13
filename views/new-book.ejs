@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("partials/header.ejs") -%>
+</head>
+
+<body>
+    <div id="mainBody">
+        <a href="/dashboard" class="back"> <ion-icon name="arrow-back-outline"></ion-icon> </a>
+
+        <h1> New Book </h1>
+
+        <form class="bookForm" action="/new-book" method="post">
+            <input required name="book_title" type="text" placeholder="The title of the book">
+            <input required name="book_notes" type="text" placeholder="Book Notes">
+            <input class="submitButton" type="submit">
+        </form>
+
+
+            <%- include("partials/footer.ejs") -%>
+    </div>
+</body>
+
+<!-- JS -->
+<script>
+    //Animate the load in of the main body
+    $(document).ready(function(){
+        $("#mainBody").animate({opacity:1});
+    })
+</script>
+</html>

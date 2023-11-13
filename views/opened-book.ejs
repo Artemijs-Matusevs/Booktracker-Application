@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("partials/header.ejs") -%>
+</head>
+
+<body>
+    <div id="mainBody">
+        <div class="openedBook">
+            <a href="/dashboard" class="back"> <ion-icon name="arrow-back-outline"></ion-icon> </a>
+
+            <div class="openedBookContent">
+                <h1 class="bookTitle"> <%= book.book_title%> </h1> 
+            </div>
+
+            <div class="openedBookContent mainContent">
+                <p>
+                     <%= book.book_notes %>
+                </p>
+            </div>
+
+
+            <div class="openedBookContent">
+                <label for="delete">
+                    <ion-icon class="edit delete" name="trash-outline"></ion-icon>
+                    <form style="display: none" action="/delete-book" method="post">
+                        <input style="display: none;" name="book_id" type="text" value="<%= book.id %>">
+                        <input style="display: none;" id="delete" class="submitButton" type="submit">
+                    </form>
+                </label>
+                <ion-icon class="edit" name="create-outline"></ion-icon>
+            </div>
+
+
+        </div>
+
+        <%- include("partials/footer.ejs") -%>
+    </div>
+</body>
+
+<!-- JS -->
+<script>
+    //Animate the load in of the main body
+    $(document).ready(function(){
+        $("#mainBody").animate({opacity:1});
+    })
+</script>
+</html>
